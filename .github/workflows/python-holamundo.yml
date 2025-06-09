@@ -11,5 +11,5 @@ jobs:
       steps:
         - name: check python
           run: |
-            print("Hola Mundo")
+            python -c "print('Hola Mundo')"
             python --version
