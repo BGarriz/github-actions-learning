@@ -1,0 +1,15 @@
+name: Python Hola Mundo
+
+on:
+  push:
+    branches: [ actions-tryouts ]
+
+jobs:
+    python:
+      runs-on: ubuntu-latest
+      
+      steps:
+        - name: check python
+          run: |
+            console.log("Hola Mundo")
+            python --version
