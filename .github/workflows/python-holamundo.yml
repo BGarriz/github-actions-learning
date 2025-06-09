@@ -5,11 +5,37 @@ on:
     branches: [ actions-tryouts ]
 
 jobs:
-    python:
+    python-check:
       runs-on: ubuntu-latest
       
       steps:
         - name: check python
           run: |
-            python -c "print('Hola Mundo')"
             python --version
+
+    create-file:
+      runs-on: ubuntu-latest
+      
+      steps:
+        - name: create file
+          run: |
+            echo "print('Hola Mundo desde HolaMundo.py')" > HolaMundo.py
+
+        - name: upload file
+          uses: actions/upload-artifact@v4
+          with:
+            name: python-artifact
+            path: HolaMundo.py
+
+    donwload-and-run:
+        runs-on: ubuntu-latest
+        
+        steps:
+            - name: download file
+            uses: actions/download-artifact@v4
+            with:
+                name: python-artifact
+    
+            - name: run python script
+            run: |
+                python HolaMundo.py
