@@ -1,0 +1,40 @@
+name: bdd_management
+
+on: workflow_dispatch
+
+jobs:
+    setup-db:
+        runs-on: ubuntu-latest
+
+        services:
+            postgresql:
+                image: postgres:18beta1
+                ports:
+                  - 5432:5432
+                env:
+                    POSTGRES_PASSWORD: ${{ secrets.POSTGREPWD }}
+                    POSTGRES_DB: Managing
+                options: >-
+                    --health-cmd="pg_isready"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=5
+
+
+        steps:
+          - name: Checkout to repo  
+            id: checkout
+            uses: actions/checkout@v4
+
+          - name: wait for postgre
+            id: postgre_waiting
+            run: |
+                echo "Waiting for PostgreSQL..."
+                until pg_isready -h localhost -p 5432; do sleep 2; done
+                echo "PostgreSQL is ready."
+
+          - name: upload data
+            id: data_upload
+            run: |
+                export PGPASSWORD=${{ secrets.POSTGREPWD }}
+                psql -h localhost -U postgres -d Managing -f data/.

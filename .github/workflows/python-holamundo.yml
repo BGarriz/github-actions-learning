@@ -1,0 +1,42 @@
+name: Python Hola Mundo
+
+on:
+  push:
+    branches: [ actions-tryouts ]
+
+jobs:
+    python-check:
+      runs-on: ubuntu-latest
+      
+      steps:
+        - name: check python
+          run: |
+            python --version
+
+    create-file:
+      runs-on: ubuntu-latest
+      
+      steps:
+        - name: create file
+          run: |
+            echo "print('Hola Mundo desde HolaMundo.py')" > HolaMundo.py
+
+        - name: upload file
+          uses: actions/upload-artifact@v4
+          with:
+            name: python-artifact
+            path: HolaMundo.py
+
+    download-and-run:
+      runs-on: ubuntu-latest
+      needs: create-file
+      
+      steps:
+        - name: download artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: python-artifact
+
+        - name: run python script
+          run: |
+            python HolaMundo.py
