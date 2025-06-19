@@ -15,22 +15,26 @@ jobs:
                     POSTGRES_PASSWORD: ${{ secrets.POSTGREPWD }}
                     POSTGRES_DB: Managing
                 options: >-
-          --health-cmd="pg_isready"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+                    --health-cmd="pg_isready"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=5
 
 
         steps:
-            - name: Checkout to repo
+          - name: Checkout to repo  
             id: checkout
             uses: actions/checkout@v4
 
-            - name: Wait for PostgreSQL to be ready
+          - name: wait for postgre
+            id: postgre_waiting
             run: |
-            echo "Waiting for PostgreSQL..."
-            until pg_isready -h localhost -p 5432; do sleep 2; done
-            echo "PostgreSQL is ready."
+                echo "Waiting for PostgreSQL..."
+                until pg_isready -h localhost -p 5432; do sleep 2; done
+                echo "PostgreSQL is ready."
 
-            - name:   psql -h localhost -U postgres -d Managing -f data/.
-
+          - name: upload data
+            id: data_upload
+            run: |
+                export PGPASSWORD=${{ secrets.POSTGREPWD }}
+                psql -h localhost -U postgres -d Managing -f data/.
