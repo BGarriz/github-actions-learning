@@ -4,7 +4,7 @@ on:
     workflow_dispatch
 
 jobs:
-    setup db:
+    setup_db:
         runs-on: ubuntu-latest
 
         services:
