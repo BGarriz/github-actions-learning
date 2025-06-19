@@ -37,4 +37,7 @@ jobs:
             id: data_upload
             run: |
                 export PGPASSWORD=${{ secrets.POSTGREPWD }}
-                psql -h localhost -U postgres -d Managing -f data/*
+                for file in data/*.sql; do
+                echo "Uploading $file"
+                psql -h localhost -U postgres -d Managing -f "$file"
+                done
